@@ -2,6 +2,9 @@
 
 * UNI-T UT61E modification
 
+The modification adds more features to the function buttons on the UT61E multimeter.
+
+
 ### How do I get set up? ###
 
 This is C-code written for the PIC16F688 microprocessor from Microchip.
