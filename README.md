@@ -9,8 +9,10 @@ More information about the modification can be found here,
 ### How do I get set up? ###
 
 This is C-code written for the PIC16F688 microprocessor from Microchip.
+I have used Microchip MPLAB XC8 C Compiler V1.34 to compile the code.
+The compiler can be downloaded [here](http://www.microchip.com/pagehandler/en_us/devtools/mplabxc/).
 
 Clone the repo and create the directories bin build and obj.
-Type "make clean;make all" and program the microprocessor with "make prog"
+Type "make clean;make all" and program the microprocessor with "make prog".
 
-You will need XC8 compiler and pk2cmd to program the microprocessor.
+You will also need pk2cmd (or similar) to program the microprocessor.
