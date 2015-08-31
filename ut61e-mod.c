@@ -69,7 +69,8 @@ void main() {
         }
 
 // Mirror BKOUT pin on ES51922A to BKLED pin on PIC to drive LEDS from PIC
-// By mirroring the port I can protect output on ES51922A
+// By mirroring the port I can protect output on ES51922A and also use the
+// LED auto-off feature in the ES51922.
         if (1==PORTAbits.RA5) {
             PORTC |= (1<<BKLED);
         } else {
@@ -77,8 +78,8 @@ void main() {
         }
 
         T1CONbits.TMR1ON = 0;
-        TMR1L = 0;
-        TMR1H = 0;
+        TMR1L = 0x00;
+        TMR1H = 0x00;
         TMR1IF = 0;
 
         __delay_ms(200);
