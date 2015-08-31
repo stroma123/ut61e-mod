@@ -93,7 +93,7 @@ void main() {
 void setupRegisters() {
     ANSEL = 0x00;   // Digital I/O
 // Setup of I/O-pins
-    PORTC = (1<<B_PIN | 1<<MAXMIN | 1<<BKLIT | 1<<D_PIN);
+    PORTC = (1<<B_PIN | 1<<MAXMIN | 1<<BKLIT | 1<<D_PIN | 1<<RS232);
     TRISC = 0x00;
     PORTA = (1<<BLUE_BUTTON | 1<<YELLOW_BUTTON);
     WPUA = (1<<BLUE_BUTTON | 1<<YELLOW_BUTTON); // Enable weak pullups
