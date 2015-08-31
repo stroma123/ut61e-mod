@@ -3,7 +3,8 @@
 * UNI-T UT61E modification
 
 The modification adds more features to the function buttons on the UT61E multimeter.
-
+More information about the modification can be found here,
+[http://foogadgets.blogspot.com/2015/08/uni-t-ut61e-modification.html](http://foogadgets.blogspot.com/2015/08/uni-t-ut61e-modification.html)
 
 ### How do I get set up? ###
 
