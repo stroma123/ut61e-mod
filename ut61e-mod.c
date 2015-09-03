@@ -17,7 +17,8 @@
 // PORTA RA-registers
 #define BLUE_BUTTON     2   // INPUT
 #define YELLOW_BUTTON   4   // INPUT
-#define BKOUT           5   // INPUT
+#define BKOUT           5   // INPUT This need a voltage divider (BKOUT(VC+))-100k+100k-(VB_)
+#define LPF             0   // OUTPUT
 // PORTC RC-registers
 #define B_PIN           0   // OUTPUT
 #define MAXMIN          1   // OUTPUT
@@ -33,6 +34,28 @@ void setupRegisters(void);
 void main() {
     setupRegisters();
 
+    // Check buttons at start-up
+    if (0==(PORTA&(1<<YELLOW_BUTTON))) {
+      T1CONbits.TMR1ON = 1;
+      __delay_ms(40);
+      while(0==(PORTA&(1<<YELLOW_BUTTON)));
+      if (1==TMR1IF) {
+        PORTA &= ~(1<<LPF); // Set LPF output to LOW
+      }
+      __delay_ms(50);
+      PORTA |= ((1<<LPF));  // Set LPF output to HIGH 50ms later
+    }
+
+    T1CONbits.TMR1ON = 0;
+    TMR1L = 0x00;
+    TMR1H = 0x00;
+    TMR1IF = 0;
+
+
+
+
+
+
     while(1) {
         SLEEP();
         NOP();
@@ -41,7 +64,7 @@ void main() {
         __delay_ms(40);
 
         switch(PORTA & (1<<BLUE_BUTTON | 1<<YELLOW_BUTTON)) {
-            case 16:  //BLUE button pressed
+            case 16:  //BLUE button was pressed
                 while(0==(PORTA&(1<<BLUE_BUTTON)));
                 if (1==TMR1IF) {
                     PORTC &= ~(1<<MAXMIN);
@@ -51,7 +74,7 @@ void main() {
                 __delay_ms(50);
                 PORTC |= ((1<<MAXMIN) | (1<<B_PIN));
                 break;
-            case 4:  // YELLOW button pressed
+            case 4:  // YELLOW button was pressed
                 while (0==(PORTA&(1<<YELLOW_BUTTON)));
                 if (1==TMR1IF) {
                     PORTC &= ~(1<<BKLIT);
@@ -61,8 +84,13 @@ void main() {
                 __delay_ms(50);
                 PORTC |= ((1<<BKLIT) | (1<<D_PIN));
                 break;
-            case 0:  // BOTH buttons pressed
-                PORTC ^= (1<<RS232);
+            case 0:  // BOTH buttons was pressed
+                while(0==(PORTA&(1<<BLUE_BUTTON | 1<<YELLOW_BUTTON)));
+                if (1==TMR1IF) {
+                    // Add triggering another feature here if needed.
+                } else {
+                    PORTC ^= (1<<RS232);
+                }
                 break;
             default:
                 break;
