@@ -1,8 +1,28 @@
-/* This code can handle several different modes.
- * Short DC-AC-button -> Default function
- * Long DC-AC-button -> Enables the MAX/MIN feature
- * Short V-Hz-button -> Default function
- * Long V-Hz-button -> LCD background light ON/OFF
+/* Software written for PIC16F688.
+ * The PIC can be installed in a DMM UT61E to enable
+ * unused features on the ES51922 by introducing more
+ * options to the function buttons at the front of the DMM.
+ *
+ * Added features:
+ * -Long push DC-AC-button -> Enables the MAX/MIN feature
+ * -Long push V-Hz-button -> LCD background light ON/OFF (60s)
+ * -Both DCAC-button and VHz-button pushed -> Toggle RS232 ON/OFF
+ * -Pushing and holding down the DC-AC button for 1/2 second
+ * during power-on, enables the Low Pass Filter AC mode.
+ * The filter is by default turned off for patent infringement
+ * reasons.
+ *
+ * Notes:
+ * -The background light on-time can be changed to 180s by
+ * connecting BKSEL (pin 113) to VB_ (-3V).
+ * -When the low pass filter mode is enabled only AC Volt
+ *  and AC current can be measured for natural reasons.
+ * -RS232 is turned off by default.
+ * -APO is enabled by default. It can be disabled by holding
+ *  any of the push functions at Power on.
+ *  The DMM will APO after 15 minutes. APO time can be changed
+ *  to 30 minutes by connecting APOSEL (pin 112) to VB_ (-3V).
+ *
  */
 
 
@@ -42,7 +62,7 @@ void setupRegisters(void);
 
 void main() {
     setupRegisters();
-
+// Check Yellow button at startup
     // Yellow button trigger LPF-AC mode
     if (0==(PORTA&(1<<VHZ))) {
         T1CONbits.TMR1ON = 1;
@@ -75,7 +95,7 @@ void main() {
         TMR1IF = 0;
     }
 
-
+// We get here only if LPF-AC mode is not selected
     while(1) {
         SLEEP();
         NOP();
@@ -117,7 +137,7 @@ void main() {
         }
 
 // Mirror BKOUT pin on ES51922A to BKLED pin on PIC to drive LEDs from PIC.
-// By mirroring the port, the ES51922A port is not only protected, but the
+// By mirroring the port, the ES51922 port is not only protected, but the
 // LED auto-off feature in the ES51922 is kept.
         if (1==PORTAbits.RA5) {
             PORTC |= (1<<BKLED);
