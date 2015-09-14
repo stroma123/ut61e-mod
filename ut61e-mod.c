@@ -23,11 +23,11 @@
 
 // Register defines
 // PORTA RA-registers
-#define DCAC            2   // INPUT
-#define VHZ             4   // INPUT
-#define BKOUT           5   // INPUT This need a voltage divider (BKOUT(VC+))-100k+100k-(VB_)
-#define LPF             0   // OUTPUT
-#define SDACDC          1   // OUTPUT
+#define DCAC            2   // INPUT Blue button
+#define VHZ             4   // INPUT Yellow button
+#define BKOUT           5   // INPUT This signal need a voltage divider (BKOUT(VC+))-100k+100k-(VB_)
+#define LPF             0   // OUTPUT Connects to FC5 Pin 118
+#define SLACDC          1   // OUTPUT Connects to SLACDC Pin 117
 // PORTC RC-registers
 #define B_PIN           0   // OUTPUT
 #define MAXMIN          1   // OUTPUT
@@ -43,28 +43,37 @@ void setupRegisters(void);
 void main() {
     setupRegisters();
 
-    // Check buttons at start-up
+    // Yellow button trigger LPF-AC mode
     if (0==(PORTA&(1<<VHZ))) {
-      T1CONbits.TMR1ON = 1;
-      __delay_ms(40);
-      while( 0==(PORTA&(1<<VHZ)) && 0==TMR1IF );
-      if (1==TMR1IF) {
-        PORTA &= ~(1<<LPF); // Enable Low Pass Filter for better AC measures
-      }
-      __delay_ms(50);
-      PORTA |= ((1<<LPF));
+        T1CONbits.TMR1ON = 1;
+        __delay_ms(40);
+        while( 0==(PORTA&(1<<VHZ)) && 0==TMR1IF );
+        if (1==TMR1IF) {
+            PORTA &= ~(1<<LPF); // Enable Low Pass Filter for better AC measures
+            PORTA |= ((1<<SLACDC));
 
-      T1CONbits.TMR1ON = 0;
-      TMR1L = 0x00;
-      TMR1H = 0x00;
-      TMR1IF = 0;
+            T1CONbits.TMR1ON = 0;
+            TMR1IF = 0;
 
-      while(1) {
-        SLEEP();
-        NOP();
-      }
+            while(1) {
+                SLEEP();
+                NOP();
+
+                __delay_ms(40);
+                if (0==(PORTA&(1<<DCAC))) {
+                    while( 0==(PORTA&(1<<DCAC)) );
+                    PORTC &= ~(1<<B_PIN);
+                    __delay_ms(50);
+                    PORTC |= (1<<B_PIN);
+                }
+            }
+        }
+        // We get here if VHZ was not pressed long enough at start-up
+        T1CONbits.TMR1ON = 0;
+        TMR1L = 0x00;
+        TMR1H = 0x00;
+        TMR1IF = 0;
     }
-
 
 
     while(1) {
@@ -134,7 +143,8 @@ void setupRegisters() {
 // Setup of I/O-pins PORTA and PORTC
     PORTC = (1<<B_PIN | 1<<MAXMIN | 1<<BKLIT | 1<<D_PIN | 1<<RS232);
     TRISC = 0x00;
-    PORTA = (1<<DCAC | 1<<VHZ);
+    PORTA = (1<<DCAC | 1<<VHZ | 1<< LPF);
+    TRISA = (1<<DCAC | 1<<VHZ | 1<<BKOUT);
     WPUA = (1<<DCAC | 1<<VHZ); // Enable weak pullups
     IOCA = (1<<DCAC | 1<<VHZ | 1<<BKOUT);
 // Setup the timer used to detect long button press
