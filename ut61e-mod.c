@@ -1,4 +1,5 @@
-/* Software written for PIC16F688.
+/* 
+ * Software written for PIC16F688.
  * The PIC can be installed in a DMM UT61E to enable
  * unused features on the ES51922 by introducing more
  * options to the function buttons at the front of the DMM.
@@ -12,17 +13,18 @@
  * The filter is by default turned off for patent infringement
  * reasons.
  *
- * Notes:
- * -The background light on-time can be changed to 180s by
- * connecting BKSEL (pin 113) to VB_ (-3V).
- * -When the low pass filter mode is enabled only AC Volt
- *  and AC current can be measured for natural reasons.
+ * Notes and tweaking the tweak:
+ * -The background light on-time can be changed from 60s to
+ *  180s by connecting BKSEL (pin 113) to VB_ (-3V).
+ * -When the low pass filter mode is enabled, only AC Volt
+ *  and AC current can be measured.
  * -RS232 is turned off by default.
- * -APO is enabled by default. It can be disabled by holding
- *  any of the push functions at Power on.
+ * -Auto Power Off (APO) is enabled by default. It can be
+ *  disabled by holding down any of the push functions at
+ *  Power-on.
  *  The DMM will APO after 15 minutes. APO time can be changed
- *  to 30 minutes by connecting APOSEL (pin 112) to VB_ (-3V).
- *
+ *  from 15 minutes to 30 minutes by connecting APOSEL (pin 112)
+ *  to VB_ (-3V).
  */
 
 
@@ -43,11 +45,11 @@
 
 // Register defines
 // PORTA RA-registers
-#define DCAC            2   // INPUT Blue button
-#define VHZ             4   // INPUT Yellow button
-#define BKOUT           5   // INPUT This signal need a voltage divider (BKOUT(VC+))-100k+100k-(VB_)
-#define LPF             0   // OUTPUT Connects to FC5 Pin 118
-#define SLACDC          1   // OUTPUT Connects to SLACDC Pin 117
+#define DCAC            2   // INPUT Hooks in to the Blue button
+#define VHZ             4   // INPUT Hooks in to the Yellow button
+#define BKOUT           5   // INPUT This signal is taken from a voltage divider (BKOUT(VC+))-100k+100k-(VB_)
+#define LPF             0   // OUTPUT to FC5 Pin 118
+#define SLACDC          1   // OUTPUT to SLACDC Pin 117
 // PORTC RC-registers
 #define B_PIN           0   // OUTPUT
 #define MAXMIN          1   // OUTPUT
@@ -62,6 +64,7 @@ void setupRegisters(void);
 
 void main() {
     setupRegisters();
+
 // Check Yellow button at startup
     // Yellow button trigger LPF-AC mode
     if (0==(PORTA&(1<<VHZ))) {
