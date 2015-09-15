@@ -45,11 +45,12 @@
 
 // Register defines
 // PORTA RA-registers
-#define DCAC            2   // INPUT Hooks in to the Blue button
-#define VHZ             4   // INPUT Hooks in to the Yellow button
-#define BKOUT           5   // INPUT This signal is taken from a voltage divider (BKOUT(VC+))-100k+100k-(VB_)
 #define LPF             0   // OUTPUT to FC5 Pin 118
 #define SLACDC          1   // OUTPUT to SLACDC Pin 117
+#define DCAC            2   // INPUT Hooks in to the Blue button
+#define VHZ             4   // INPUT Hooks in to the Yellow button
+#define BKOUT           5   // INPUT This signal is taken from a voltage
+                            // divider (BKOUT(VC+))-100k+100k-(VB_)
 // PORTC RC-registers
 #define B_PIN           0   // OUTPUT
 #define MAXMIN          1   // OUTPUT
