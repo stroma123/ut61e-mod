@@ -4,7 +4,7 @@
 
 The modification adds more features to the function buttons on the UT61E multimeter.
 More information about the modification can be found here,
-[http://foogadgets.blogspot.com/2015/08/uni-t-ut61e-modification.html](http://foogadgets.blogspot.com/2015/08/uni-t-ut61e-modification.html)
+[http://foogadgets.blogspot.se/2015/09/uni-t-ut61e-modification.html](http://foogadgets.blogspot.se/2015/09/uni-t-ut61e-modification.html)
 
 ### How do I get set up? ###
 
@@ -17,4 +17,3 @@ Clone the repo and create the directories bin/ build/ and obj/.
 Type "make clean;make all" and program the microprocessor with "make prog".
 
 You will also need pk2cmd (or similar) to program the microprocessor.
-
