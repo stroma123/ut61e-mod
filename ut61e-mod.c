@@ -45,8 +45,8 @@
 
 // Register defines
 // PORTA RA-registers
-#define LPF             0   // OUTPUT to FC5 Pin 118
-#define SLACDC          1   // OUTPUT to SLACDC Pin 117
+#define LPF             0   // OUTPUT to FC5 Pin 118. Default High
+#define SLACDC          1   // OUTPUT to SLACDC Pin 117. Default Low
 #define DCAC            2   // INPUT Hooks in to the Blue button
 #define VHZ             4   // INPUT Hooks in to the Yellow button
 #define BKOUT           5   // INPUT This signal is taken from a voltage

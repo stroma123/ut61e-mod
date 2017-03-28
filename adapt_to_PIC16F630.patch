@@ -1,0 +1,46 @@
+diff -Naur ut61e-modification/Makefile ut61e-modification.16f630/Makefile
+--- ut61e-modification/Makefile	2017-03-28 09:47:53.000000000 +0200
++++ ut61e-modification.16f630/Makefile	2017-03-28 09:49:55.000000000 +0200
+@@ -1,5 +1,5 @@
+ #compiling settings
+-PROCESSOR	= 16F688
++PROCESSOR	= 16F630
+ CC		= xc8
+ PROJ_DIR	= .
+ BUILD_DIR	= ${PROJ_DIR}/build
+diff -Naur ut61e-modification/ut61e-mod.c ut61e-modification.16f630/ut61e-mod.c
+--- ut61e-modification/ut61e-mod.c	2015-09-20 17:50:28.000000000 +0200
++++ ut61e-modification.16f630/ut61e-mod.c	2017-03-28 09:54:38.000000000 +0200
+@@ -28,15 +28,13 @@
+  */
+ 
+ 
+-#pragma config FOSC = INTOSCIO
++#pragma config FOSC = INTRCIO
+ #pragma config WDTE = OFF
+ #pragma config PWRTE = OFF
+ #pragma config MCLRE = OFF
+ #pragma config CP = OFF
+ #pragma config CPD = OFF
+ #pragma config BOREN = OFF
+-#pragma config IESO = OFF
+-#pragma config FCMEN = OFF
+ 
+ #define _XTAL_FREQ 4000000
+ 
+@@ -163,7 +161,6 @@
+ 
+ 
+ void setupRegisters() {
+-    ANSEL = 0x00;   // Make I/O-pins digital
+ // Setup of I/O-pins PORTA and PORTC
+     PORTC = (1<<B_PIN | 1<<MAXMIN | 1<<BKLIT | 1<<D_PIN | 1<<RS232);
+     TRISC = 0x00;
+@@ -183,6 +180,6 @@
+     RAIE = 1;
+ // Setup the oscillator
+     OPTION_REG = 0x00;
+-    CMCON0 = 0x07;  // Disable comparator to save power
++    CMCON = 0x07;  // Disable comparator to save power
+ }
+ 
